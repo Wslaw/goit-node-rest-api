@@ -66,9 +66,7 @@ import HttpError from "../helpers/HttpError.js";
 const updateStatusContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const favoredContact = await contactsServices.upgradeContact(id, req.body, {
-      new: true,
-    });
+    const favoredContact = await contactsServices.upgradeContact(id, req.body);
     if (!favoredContact) {
       throw HttpError(404);
     }
