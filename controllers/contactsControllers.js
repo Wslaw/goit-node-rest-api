@@ -1,7 +1,8 @@
 import * as contactsServices from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
+// import { createContactSchema, updateContactSchema } from "../schemas/contactsSchemas.js";
 
-const getAllContacts = async (req, res, next) => {
+ const getAllContacts = async (req, res, next) => {
   try {
     res.status(200).json(await contactsServices.listContacts());
   } catch (error) {
@@ -9,7 +10,7 @@ const getAllContacts = async (req, res, next) => {
   }
 };
 
-const getOneContact = async (req, res, next) => {
+ const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await contactsServices.getContactById(id);
@@ -22,20 +23,21 @@ const getOneContact = async (req, res, next) => {
   }
 };
 
-const deleteContact = async (req, res, next) => {
+ const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await contactsServices.removeContact(id);
     if (!result) {
       throw HttpError(404, `Contact with id=${id} not found`);
     }
-    res.status(200).json({ message: "Delete success", Deleted_contact:result });
+    res.status(200).json({result});
+    
   } catch (error) {
     next(error);
   }
 };
 
-const createContact = async (req, res, next) => {
+ const createContact = async (req, res, next) => {
   try {
     // const { name, email, phone } = req.body;
     const result = await contactsServices.addContact(req.body);
@@ -48,12 +50,12 @@ const createContact = async (req, res, next) => {
   }
 };
 
-const updateContact = async (req, res, next) => {
+ const updateContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await contactsServices.upgradeContact(id, req.body);
     if (!result) {
-      throw HttpError(404, `Contact with id=${id} not found`);
+      throw HttpError(404,`Contact with id=${id} not found`);
     }
     res.status(200).json(result);
   } catch (error) {
@@ -74,7 +76,7 @@ const updateStatusContact = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}
 
 export default {
   getAllContacts,
