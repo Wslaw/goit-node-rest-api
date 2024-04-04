@@ -5,13 +5,13 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 
 
-export const getAllContacts = ctrlWrapper(async (req, res, next) => {
+export const getAllContacts = ctrlWrapper(async (req, res) => {
   
     res.status(200).json(await listContacts());
   
 });
 
-export const getOneContact = (async (req, res, next) => {
+export const getOneContact = (async (req, res) => {
   
     const { id } = req.params;
     const result = await getContactById(id);
@@ -22,7 +22,7 @@ export const getOneContact = (async (req, res, next) => {
   
 });
 
-export const deleteContact = ctrlWrapper(async (req, res, next) => {
+export const deleteContact = ctrlWrapper(async (req, res) => {
   
     const { id } = req.params;
     const result = await removeContact(id);
@@ -33,7 +33,7 @@ export const deleteContact = ctrlWrapper(async (req, res, next) => {
   
 });
 
-export const createContact = ctrlWrapper(async (req, res, next) => {
+export const createContact = ctrlWrapper(async (req, res) => {
  
     const { name, email, phone } = req.body;
     const result = await addContact(name, email, phone);
@@ -41,7 +41,7 @@ export const createContact = ctrlWrapper(async (req, res, next) => {
  
 });
 
-export const updateContact = ctrlWrapper(async (req, res, next) => {
+export const updateContact = ctrlWrapper(async (req, res) => {
  
     const { id } = req.params;
     const result = await upgradeContact(id, req.body);
