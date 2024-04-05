@@ -7,6 +7,8 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 import * as authServices from "../services/authServices.js";
 
+import "dotenv/config";
+
 const { JWT_SECRET } = process.env;
 
 export const register = ctrlWrapper(async (req, res) => {
