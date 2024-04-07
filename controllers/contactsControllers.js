@@ -1,10 +1,6 @@
-import { listContacts,countContacts, getContactByFilter, addContact, removeContact, upgradeContact } from "../services/contactsServices.js";
+import { listContacts, countContacts, getContactByFilter, addContact, removeContact, upgradeContact } from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
-
-
-
-
 
 export const getAllContacts = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
@@ -35,7 +31,6 @@ export const getOneContact = ctrlWrapper(async (req, res) => {
   res.status(200).json(result);
 });
 
-
 export const deleteContact = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
@@ -47,8 +42,6 @@ export const deleteContact = ctrlWrapper(async (req, res) => {
   res.status(200).json(result);
 });
 
-
-
 export const createContact = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
   const result = await addContact({ ...req.body, owner });
@@ -57,8 +50,6 @@ export const createContact = ctrlWrapper(async (req, res) => {
   }
   res.status(201).json(result);
 });
-
-
 
 export const updateContact = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
@@ -74,9 +65,7 @@ export const updateContact = ctrlWrapper(async (req, res) => {
 export const updateStatusContact = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
-  const favoredContact = await upgradeContact({ owner, _id: id }, req.body, {
-    new: true,
-  });
+  const favoredContact = await upgradeContact({ owner, _id: id }, req.body);
   if (!favoredContact) {
     throw HttpError(404);
   }
