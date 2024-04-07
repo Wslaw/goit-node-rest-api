@@ -63,7 +63,7 @@ export const createContact = ctrlWrapper(async (req, res) => {
 export const updateContact = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
-  const result = await updateContact({ owner, _id: id }, req.body);
+  const result = await upgradeContact({ owner, _id: id }, req.body);
   if (!result) {
     throw HttpError(404, `Contact with id=${id} not found`);
   }

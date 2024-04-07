@@ -8,3 +8,4 @@ export const setUpdateSetting = function (next) {
   this.options.runValidators = true;
   next();
 };
+ 
