@@ -1,13 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 import HttpError from "../helpers/HttpError.js";
-
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
-
 import * as authServices from "../services/authServices.js";
-
 import "dotenv/config";
+import gravatar from "gravatar";
 
 const { JWT_SECRET } = process.env;
 

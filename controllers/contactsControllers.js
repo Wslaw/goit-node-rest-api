@@ -1,6 +1,10 @@
 import { listContacts, countContacts, getContactByFilter, addContact, removeContact, upgradeContact } from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
+import fs from "fs/promises";
+import path from "path";
+
+const avatarPath = path.resolve("public", "avatars");
 
 export const getAllContacts = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
@@ -44,7 +48,12 @@ export const deleteContact = ctrlWrapper(async (req, res) => {
 
 export const createContact = ctrlWrapper(async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await addContact({ ...req.body, owner });
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarPath, filename);
+
+  await fs.rename(oldPath, newPath);
+  const avatar = path.join("public", "avatars", filename);
+  const result = await addContact({ ...req.body, avatar, owner });
   if (!result) {
     throw HttpError(400);
   }
