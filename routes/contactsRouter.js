@@ -1,14 +1,9 @@
 import express from "express";
-
 import { getAllContacts, getOneContact, deleteContact, createContact, updateContact } from "../controllers/contactsControllers.js";
-
 import { createContactSchema, updateContactSchema, updateStatusSchema } from "../schemas/contactsSchemas.js";
-
 import validateBody from "../helpers/validateBody.js";
-
 import isValidId from "../middlewares/authenticate.js";
 import authenticate from "../middlewares/authenticate.js";
-
 import upload from "../middlewares/upload.js";
 
 const contactsRouter = express.Router();

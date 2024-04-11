@@ -14,11 +14,13 @@ export const register = ctrlWrapper(async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use");
   }
+  const avatarURL = gravatar.url(email, { protocol: "https", d: "identicon" });
 
   const hashPassword = await bcrypt.hash(password, 10);
 
   const newUser = await authServices.register({
     ...req.body,
+    avatarURL,
     password: hashPassword,
   });
   if (!newUser) {
@@ -28,6 +30,7 @@ export const register = ctrlWrapper(async (req, res) => {
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarURL: newUser.avatarURL,
     },
   });
 });
@@ -58,13 +61,14 @@ export const login = ctrlWrapper(async (req, res) => {
     user: {
       email: user.email,
       subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 });
 
 export const getCurrent = ctrlWrapper(async (req, res) => {
-  const { email, subscription } = req.user;
-  res.json({ email, subscription });
+  const { email, subscription, avatarURL } = req.user;
+  res.json({ email, subscription, avatarURL });
 });
 
 export const logout = ctrlWrapper(async (req, res) => {
