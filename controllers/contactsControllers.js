@@ -86,24 +86,3 @@ export const updateStatusContact = ctrlWrapper(async (req, res) => {
   res.status(200).json(favoredContact);
 });
 
-export const updateAvatar = ctrlWrapper(async (req, res) => {
-  if (!req.file) {
-    throw HttpError(400, "No file uploaded");
-  }
-
-  const { _id, email } = req.user;
-  const { path: oldPath, filename } = req.file;
-
-  Jimp.read(oldPath, (err, img) => {
-    if (err) throw err;
-    img.resize(250, 250);
-  });
-
-  const newFilename = `${email}_${filename}`;
-  const newPath = path.join(avatarPath, newFilename);
-  await fs.rename(oldPath, newPath);
-  const avatarURL = path.join("avatars", newFilename);
-  await User.findByIdAndUpdate(_id, { avatarURL });
-
-  res.status(200).json({ avatarURL });
-});

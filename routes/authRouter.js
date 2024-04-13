@@ -1,7 +1,7 @@
 import express from "express";
 
 import validateBody from "../helpers/validateBody.js";
-import { updateAvatar } from "../controllers/contactsControllers.js";
+import { updateAvatar } from "../controllers/authControllers.js";
 import { registerSchema, loginSchema } from "../schemas/usersSchemas.js";
 
 import { login, register, logout, getCurrent } from "../controllers/authControllers.js";
