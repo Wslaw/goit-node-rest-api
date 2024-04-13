@@ -57,6 +57,7 @@ export const createContact = ctrlWrapper(async (req, res) => {
 
   await fs.rename(oldPath, newPath);
   const avatar = path.join( "avatars", filename);
+  
   const result = await addContact({ ...req.body, avatar, owner });
   if (!result) {
     throw HttpError(400);

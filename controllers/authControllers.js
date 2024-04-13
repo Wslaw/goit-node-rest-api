@@ -6,6 +6,7 @@ import * as authServices from "../services/authServices.js";
 import "dotenv/config";
 import gravatar from "gravatar";
 
+
 const { JWT_SECRET } = process.env;
 
 export const register = ctrlWrapper(async (req, res) => {
@@ -14,8 +15,7 @@ export const register = ctrlWrapper(async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use");
   }
-  const avatarURL = gravatar.url(email, { protocol: "https", d: "identicon" });
-
+  const avatarURL = gravatar.url(email, {  d: "identicon" });
   const hashPassword = await bcrypt.hash(password, 10);
 
   const newUser = await authServices.register({
@@ -48,7 +48,7 @@ export const login = ctrlWrapper(async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const { _id: id } = user;
+  const { _id: id, subscription, avatarURL } = user;
 
   const payload = {
     id,
@@ -59,9 +59,9 @@ export const login = ctrlWrapper(async (req, res) => {
   res.json({
     token,
     user: {
-      email: user.email,
-      subscription: user.subscription,
-      avatarURL: user.avatarURL,
+      email,
+      subscription,
+      avatarURL,
     },
   });
 });

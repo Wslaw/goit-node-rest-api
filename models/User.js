@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-
 import { handleSaveError, setUpdateSetting } from "./hooks.js";
 import { emailRegexp } from "../constants/user-constants.js";
 
@@ -27,7 +26,6 @@ const userSchema = new Schema(
     },
     avatarURL: {
       type: String,
-      // required: true,
     },
   },
   { versionKey: false, timestamps: true }
