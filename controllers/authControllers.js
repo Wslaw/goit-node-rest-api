@@ -62,6 +62,30 @@ export const verify = ctrlWrapper(async (req, res) => {
   });
 });
 
+export const resendVerify = ctrlWrapper(async (req, res) => {
+  const { email } = req.body;
+  const user = await authServices.findUser({ email });
+  if (!user) {
+    throw HttpError(404, "Email not found");
+  }
+
+  if (user.verify) {
+    throw HttpError(400, "Verification already verify");
+  }
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${PROJECT_URL}/api/users/verify/${user.verificationToken}">Click verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
+
+  res.json({
+    message: "Verify email send again",
+  });
+}); 
+
 export const login = ctrlWrapper(async (req, res) => {
   const { email, password } = req.body;
 
