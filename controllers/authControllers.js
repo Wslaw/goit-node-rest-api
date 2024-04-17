@@ -5,9 +5,11 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import * as authServices from "../services/authServices.js";
 import "dotenv/config";
 import gravatar from "gravatar";
+import { nanoid } from "nanoid";
+import sendEmail from "../helpers/sendEmail.js";
 
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, PROJECT_URL } = process.env;
 
 export const register = ctrlWrapper(async (req, res) => {
   const { email, password } = req.body;
@@ -18,14 +20,25 @@ export const register = ctrlWrapper(async (req, res) => {
   const avatarURL = gravatar.url(email, {  d: "identicon" });
   const hashPassword = await bcrypt.hash(password, 10);
 
+  const verificationToken = nanoid();
+
   const newUser = await authServices.register({
     ...req.body,
     avatarURL,
     password: hashPassword,
+    verificationToken,
   });
   if (!newUser) {
     throw HttpError(404, "Not found");
-  }
+  };
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${PROJECT_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
+
   res.status(201).json({
     user: {
       email: newUser.email,
@@ -35,13 +48,31 @@ export const register = ctrlWrapper(async (req, res) => {
   });
 });
 
+export const verify = ctrlWrapper(async (req, res) => {
+  const { verificationToken } = req.params;
+  const user = await authServices.findUser({ verificationToken });
+  if (!user) {
+    throw HttpError(404, "Email not found or already verify");
+  }
+
+  await authServices.updateUser({ _id: user._id }, { verify: true, verificationToken: "" });
+
+  res.json({
+    message: "Verification successful",
+  });
+});
+
 export const login = ctrlWrapper(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await authServices.findUser({ email });
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
-  }
+  };
+
+   if (!user.verify) {
+     throw HttpError(401, "Email not verify");
+  };
 
   const comparePassword = await bcrypt.compare(password, user.password);
   if (!comparePassword) {
